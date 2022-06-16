@@ -33,3 +33,6 @@
 
 # VS folders
 .vs/
+
+# Binaries
+bin/
