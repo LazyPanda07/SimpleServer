@@ -19,4 +19,8 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="web_framework_settings.json" />
+    <None Include="web.json" />
+  </ItemGroup>
 </Project>

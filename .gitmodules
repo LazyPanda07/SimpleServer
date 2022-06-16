@@ -1,0 +1,6 @@
+[submodule "WebFrameworkLibrary"]
+	path = WebFrameworkLibrary
+	url = https://github.com/LazyPanda07/WebFramework.git
+[submodule "GUIFrameworkLibrary"]
+	path = GUIFrameworkLibrary
+	url = https://github.com/LazyPanda07/GUIFramework.git

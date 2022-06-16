@@ -1,0 +1,10 @@
+﻿  BaseJSONException.cpp
+  CantFindValueException.cpp
+  WrongEncodingException.cpp
+  WrongInputStreamException.cpp
+  JSONArrayWrapper.cpp
+  JSONBuilder.cpp
+  JSONParser.cpp
+  JSONUtility.cpp
+  Generating Code...
+  JSON.vcxproj -> C:\Users\semen\source\repos\SimpleServer\bin\Debug-x64\JSON\JSON.lib

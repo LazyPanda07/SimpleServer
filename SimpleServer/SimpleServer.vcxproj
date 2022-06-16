@@ -46,10 +46,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -58,11 +60,17 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)WebFrameworkLibrary\WebFramework\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\JSON\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\src\;$(SolutionDir)WebFrameworkLibrary\Networks\SocketStreams\src\;$(SolutionDir)WebFrameworkLibrary\Networks\src\;$(SolutionDir)WebFrameworkLibrary\Log\src\;$(SolutionDir)WebFrameworkLibrary\INIParser\src\;$(SolutionDir)WebFrameworkLibrary\ThreadPool\src\;$(SolutionDir)WebFrameworkLibrary\FileManager\src\;$(SolutionDir)WebFrameworkLibrary\Localization\src\;$(SolutionDir)WebFrameworkLibrary\SHA256\src\;$(SolutionDir)WebFrameworkLibrary\BaseTCPServer\src\;$(SolutionDir)WebFrameworkLibrary\Networks\vendor\OpenSSL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)WebFrameworkLibrary\WebFramework\libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <CustomBuildStep>
+      <Command>xcopy /y $(SolutionDir)WebFrameworkLibrary\WebFramework\dlls\*.* $(OutDir)</Command>
+      <Outputs>output.txt</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -73,16 +81,31 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)WebFrameworkLibrary\WebFramework\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\JSON\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\src\;$(SolutionDir)WebFrameworkLibrary\Networks\SocketStreams\src\;$(SolutionDir)WebFrameworkLibrary\Networks\src\;$(SolutionDir)WebFrameworkLibrary\Log\src\;$(SolutionDir)WebFrameworkLibrary\INIParser\src\;$(SolutionDir)WebFrameworkLibrary\ThreadPool\src\;$(SolutionDir)WebFrameworkLibrary\FileManager\src\;$(SolutionDir)WebFrameworkLibrary\Localization\src\;$(SolutionDir)WebFrameworkLibrary\SHA256\src\;$(SolutionDir)WebFrameworkLibrary\BaseTCPServer\src\;$(SolutionDir)WebFrameworkLibrary\Networks\vendor\OpenSSL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)WebFrameworkLibrary\WebFramework\libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <CustomBuildStep>
+      <Command>xcopy /y $(SolutionDir)WebFrameworkLibrary\WebFramework\dlls\*.* $(OutDir)</Command>
+      <Outputs>output.txt</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebFrameworkLibrary\WebFramework\WebFramework.vcxproj">
+      <Project>{e66352d0-66c8-4bae-85e4-4715d53fd651}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="web.json" />
+    <None Include="web_framework_settings.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

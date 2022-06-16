@@ -1,0 +1,5 @@
+﻿  BaseTCPServer.cpp
+  ClientData.cpp
+  WebException.cpp
+  Generating Code...
+  BaseTCPServer.vcxproj -> C:\Users\semen\source\repos\SimpleServer\bin\Debug-x64\BaseTCPServer\BaseTCPServer.lib

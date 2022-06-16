@@ -1,0 +1,15 @@
+﻿  AppendBinaryFileHandle.cpp
+  AppendFileHandle.cpp
+  Cache.cpp
+  BaseFileManagerException.cpp
+  FileDoesNotExistException.cpp
+  NotAFileException.cpp
+  ReadBinaryFileHandle.cpp
+  ReadFileHandle.cpp
+  FileHandle.cpp
+  FileManager.cpp
+  Utility.cpp
+  WriteBinaryFileHandle.cpp
+  WriteFileHandle.cpp
+  Generating Code...
+  FileManager.vcxproj -> C:\Users\semen\source\repos\SimpleServer\bin\Debug-x64\FileManager\FileManager.lib
