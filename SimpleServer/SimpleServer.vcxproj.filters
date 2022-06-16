@@ -22,5 +22,6 @@
   <ItemGroup>
     <None Include="web_framework_settings.json" />
     <None Include="web.json" />
+    <None Include="gui_framework.json" />
   </ItemGroup>
 </Project>
