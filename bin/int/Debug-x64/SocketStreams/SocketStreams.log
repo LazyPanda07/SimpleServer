@@ -1,7 +1,0 @@
-﻿  CheckAtCompileTime.cpp
-  BaseIOSocketBuffer.cpp
-  BaseIOSocketStream.cpp
-  BaseNetwork.cpp
-  WebException.cpp
-  Generating Code...
-  SocketStreams.vcxproj -> C:\Users\semen\source\repos\SimpleServer\bin\Debug-x64\SocketStreams\SocketStreams.lib
