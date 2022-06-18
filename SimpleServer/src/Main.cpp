@@ -2,6 +2,9 @@
 
 #include "GUIFramework.h"
 #include "Exceptions/BaseGUIFrameworkException.h"
+#include "Utility/Holders/WindowHolder.h"
+
+#include "MainWindow.h"
 
 using namespace std;
 
@@ -11,15 +14,23 @@ int wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
 	try
 	{
-		gui_framework::GUIFramework& instance = gui_framework::GUIFramework::get();
+		gui_framework::GUIFramework::initUIThreadId();
+
+		gui_framework::WindowHolder holder(make_unique<simple_server::MainWindow>());
+		
+		holder.runMainLoop();
 	}
 	catch (const gui_framework::exceptions::BaseGUIFrameworkException& e)
 	{
-		// TODO: show error
+		using gui_framework::BaseDialogBox;
+
+		BaseDialogBox::createMessageBox(gui_framework::utility::to_wstring(e.what(), CP_ACP), L"Error", BaseDialogBox::messageBoxType::ok);
 	}
 	catch (const exception& e)
 	{
-		// TODO: show error
+		using gui_framework::BaseDialogBox;
+
+		BaseDialogBox::createMessageBox(gui_framework::utility::to_wstring(e.what(), CP_ACP), L"Error", BaseDialogBox::messageBoxType::ok);
 	}
 
 	return 0;
