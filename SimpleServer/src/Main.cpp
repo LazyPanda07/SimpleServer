@@ -20,12 +20,6 @@ int wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 		
 		holder.runMainLoop();
 	}
-	catch (const gui_framework::exceptions::BaseGUIFrameworkException& e)
-	{
-		using gui_framework::BaseDialogBox;
-
-		BaseDialogBox::createMessageBox(gui_framework::utility::to_wstring(e.what(), CP_ACP), L"Error", BaseDialogBox::messageBoxType::ok);
-	}
 	catch (const exception& e)
 	{
 		using gui_framework::BaseDialogBox;

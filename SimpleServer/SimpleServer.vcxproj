@@ -111,8 +111,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="gui_framework.json" />
+    <None Include="server_configuration.json" />
     <None Include="web.json" />
-    <None Include="web_framework_settings.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\MainWindow.h" />
