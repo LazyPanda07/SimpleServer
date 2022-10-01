@@ -121,6 +121,7 @@ del /q $(OutDir)*exp</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\MainWindow.h" />
+    <ClInclude Include="src\SimpleServerConstants.h" />
     <ClInclude Include="src\Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
