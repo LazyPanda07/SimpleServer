@@ -1,8 +1,8 @@
 #include "headers.h"
 
 #include "GUIFramework.h"
-#include "Exceptions/BaseGUIFrameworkException.h"
 #include "Utility/Holders/WindowHolder.h"
+#include "Utility.h"
 
 #include "MainWindow.h"
 
@@ -22,9 +22,7 @@ int wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 	}
 	catch (const exception& e)
 	{
-		using gui_framework::BaseDialogBox;
-
-		BaseDialogBox::createMessageBox(gui_framework::utility::to_wstring(e.what(), CP_ACP), L"Error", BaseDialogBox::messageBoxType::ok);
+		simple_server::utility::showError(e);
 	}
 
 	return 0;

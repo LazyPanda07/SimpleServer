@@ -17,11 +17,12 @@ namespace simple_server
 		static int getCenterY(int height);
 
 	private:
+		std::wstring currentServerFolder;
 		IFileDialog* serverFolderDialog;
 		IShellItem* serverFolder;
 		gui_framework::Button* serverButton;
-		bool serverState;
 		std::unique_ptr<framework::WebFramework> server;
+		bool serverState;
 
 	private:
 		void createMarkup();
