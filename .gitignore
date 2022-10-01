@@ -39,6 +39,7 @@ bin/
 
 # Logs
 logs/
+SimpleServer/logs/
 
 # Localization
 ProjectLocalization/intermediate/
