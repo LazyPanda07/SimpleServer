@@ -2,6 +2,7 @@
 
 #include "MenuItems/MenuItem.h"
 #include "Utility.h"
+#include "SimpleServerConstants.h"
 
 using namespace std;
 
@@ -63,7 +64,10 @@ namespace simple_server
 	{
 		try
 		{
-			server = make_unique<framework::WebFramework>(filesystem::path(currentServerFolder) / "server_configuration.json");
+			if (!server || (server && server->getConfigurationJSONFile() != filesystem::path(currentServerFolder) / constants::serverConfiguration))
+			{
+				server = make_unique<framework::WebFramework>(filesystem::path(currentServerFolder) / constants::serverConfiguration);
+			}
 		}
 		catch (const exception& e)
 		{
@@ -71,7 +75,7 @@ namespace simple_server
 
 			return;
 		}
-		
+
 		server->startServer();
 
 		serverState = true;
@@ -120,7 +124,7 @@ namespace simple_server
 			),
 			"MainWindow"
 		),
-		currentServerFolder(filesystem::current_path().wstring()),
+		currentServerFolder(filesystem::current_path()),
 		serverFolder(nullptr),
 		serverState(false)
 	{
