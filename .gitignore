@@ -39,3 +39,6 @@ bin/
 
 # Logs
 logs/
+
+# Localization
+ProjectLocalization/intermediate/
