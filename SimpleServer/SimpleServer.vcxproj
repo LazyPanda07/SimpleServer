@@ -69,7 +69,8 @@
       <AdditionalLibraryDirectories>$(SolutionDir)WebFrameworkLibrary\WebFramework\libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>
-      <Command>xcopy /y $(SolutionDir)WebFrameworkLibrary\WebFramework\dlls\*.* $(OutDir)</Command>
+      <Command>xcopy /y $(SolutionDir)WebFrameworkLibrary\WebFramework\dlls\*.* $(OutDir)
+xcopy /y $(SolutionDir)ProjectLocalization\intermediate\SimpleServerLocalization.dll $(OutDir)</Command>
       <Outputs>output.txt</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
@@ -95,9 +96,9 @@
     <CustomBuildStep>
       <Command>xcopy /y $(SolutionDir)WebFrameworkLibrary\WebFramework\dlls\*.* $(OutDir)
 xcopy /y $(ProjectDir)*.json $(OutDir)
-xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\Localization.dll $(OutDir)
 del /q $(OutDir)*.lib
-del /q $(OutDir)*exp</Command>
+del /q $(OutDir)*exp
+xcopy /y $(SolutionDir)ProjectLocalization\intermediate\SimpleServerLocalization.dll $(OutDir)</Command>
       <Outputs>output.txt</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
