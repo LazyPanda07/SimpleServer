@@ -17,7 +17,7 @@ namespace simple_server
 		static int getCenterY(int height);
 
 	private:
-		std::wstring currentServerFolder;
+		std::filesystem::path currentServerFolder;
 		IFileDialog* serverFolderDialog;
 		IShellItem* serverFolder;
 		gui_framework::Button* serverButton;
@@ -26,6 +26,10 @@ namespace simple_server
 
 	private:
 		void createMarkup();
+
+		void applyConfiguration();
+
+		bool onClose();
 
 	private:
 		void changeServerState();

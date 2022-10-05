@@ -26,9 +26,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="web.json" />
     <None Include="gui_framework.json" />
-    <None Include="server_configuration.json" />
+    <None Include="simple_server_configuration.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\MainWindow.h">

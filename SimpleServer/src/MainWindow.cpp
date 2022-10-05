@@ -1,5 +1,7 @@
 #include "MainWindow.h"
 
+#include <fstream>
+
 #include "MenuItems/MenuItem.h"
 #include "Utility.h"
 #include "SimpleServerConstants.h"
@@ -53,6 +55,28 @@ namespace simple_server
 			}));
 	}
 
+	void MainWindow::applyConfiguration()
+	{
+		json::JSONParser simpleServerConfiguration = ifstream(constants::simpleServerConfiguration);
+
+		const string& pathToLastApp = simpleServerConfiguration.getString(constants::settings::pathToLastAppSetting);
+
+		if (filesystem::exists(pathToLastApp))
+		{
+			currentServerFolder = pathToLastApp;
+		}
+	}
+
+	bool MainWindow::onClose()
+	{
+		if (json::JSONParser(constants::simpleServerConfiguration).getString(constants::settings::pathToLastAppSetting) != currentServerFolder.string())
+		{
+			ofstream(constants::simpleServerConfiguration) << json::JSONBuilder(CP_UTF8).appendString(constants::settings::pathToLastAppSetting, currentServerFolder.string());
+		}
+
+		return true;
+	}
+
 	void MainWindow::changeServerState()
 	{
 		serverState ?
@@ -64,9 +88,9 @@ namespace simple_server
 	{
 		try
 		{
-			if (!server || (server && server->getConfigurationJSONFile() != filesystem::path(currentServerFolder) / constants::serverConfiguration))
+			if (!server || (server && server->getConfigurationJSONFile() != filesystem::path(currentServerFolder) / constants::webFrameworkConfiguration))
 			{
-				server = make_unique<framework::WebFramework>(filesystem::path(currentServerFolder) / constants::serverConfiguration);
+				server = make_unique<framework::WebFramework>(filesystem::path(currentServerFolder) / constants::webFrameworkConfiguration);
 			}
 		}
 		catch (const exception& e)
@@ -130,6 +154,8 @@ namespace simple_server
 	{
 		setExitMode(exitMode::quit);
 
+		this->setOnClose(bind(&MainWindow::onClose, this));
+
 		switch (CoCreateInstance(CLSID_FileOpenDialog, nullptr, tagCLSCTX::CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&serverFolderDialog)))
 		{
 		case S_OK:
@@ -148,13 +174,15 @@ namespace simple_server
 			throw runtime_error("serverFolderDialog is nullptr");
 		}
 
+		this->applyConfiguration();
+
 		this->createMarkup();
 
 		serverFolderDialog->SetOptions(FOS_PICKFOLDERS | FOS_PATHMUSTEXIST);
 
 		IShellItem* folder;
 
-		SHCreateItemFromParsingName(currentServerFolder.data(), nullptr, IID_PPV_ARGS(&folder));
+		SHCreateItemFromParsingName(currentServerFolder.wstring().data(), nullptr, IID_PPV_ARGS(&folder));
 
 		serverFolderDialog->SetFolder(folder);
 

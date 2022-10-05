@@ -117,8 +117,7 @@ xcopy /y $(SolutionDir)ProjectLocalization\intermediate\SimpleServerLocalization
   </ItemGroup>
   <ItemGroup>
     <None Include="gui_framework.json" />
-    <None Include="server_configuration.json" />
-    <None Include="web.json" />
+    <None Include="simple_server_configuration.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\MainWindow.h" />
