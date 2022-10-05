@@ -1,6 +1,8 @@
 {
-  "stopApplication": "Остановить приложение",
-  "chooseApplicationFolder": "Выбрать папку приложения",
+  "errorTitle": "Ошибка",
+  "changeFolderError": "Приложение запущено",
   "startApplication": "Запустить приложение",
+  "chooseApplicationFolder": "Выбрать папку приложения",
+  "stopApplication": "Остановить приложение",
   "stoppingApplication": "Остановка приложения..."
 }

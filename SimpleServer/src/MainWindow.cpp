@@ -25,15 +25,17 @@ namespace simple_server
 	void MainWindow::createMarkup()
 	{
 		localization::WTextLocalization& localization = localization::WTextLocalization::get();
-
-		serverButton = new gui_framework::Button(L"Start", localization[constants::localization_keys::startApplicationKey], gui_framework::utility::ComponentSettings(10, 10, 200, 30), this, bind(&MainWindow::changeServerState, this));
-
-		serverButton->setBackgroundColor(255, 0, 0);
-
 		unique_ptr<gui_framework::Menu>& menu = this->createMainMenu(L"Menu");
 
 		menu->addMenuItem(make_unique<gui_framework::MenuItem>(localization[constants::localization_keys::chooseApplicationFolderKey], [this]()
 			{
+				if (server && server->getServerState())
+				{
+					utility::showError(runtime_error(localization::TextLocalization::get()[constants::localization_keys::changeFolderErrorKey]));
+
+					return;
+				}
+
 				if (serverFolderDialog->Show(nullptr) != S_OK)
 				{
 					return;
@@ -55,6 +57,10 @@ namespace simple_server
 
 				CoTaskMemFree(pathToFolder);
 			}));
+
+		serverButton = new gui_framework::Button(L"Start", localization[constants::localization_keys::startApplicationKey], gui_framework::utility::ComponentSettings(10, 10, 200, 30), this, bind(&MainWindow::changeServerState, this));
+
+		serverButton->setBackgroundColor(255, 0, 0);
 	}
 
 	void MainWindow::applyConfiguration()
@@ -198,7 +204,7 @@ namespace simple_server
 
 		IShellItem* folder;
 
-		SHCreateItemFromParsingName(currentServerFolder.wstring().data(), nullptr, IID_PPV_ARGS(&folder));
+		SHCreateItemFromParsingName(filesystem::current_path().wstring().data(), nullptr, IID_PPV_ARGS(&folder));
 
 		serverFolderDialog->SetFolder(folder);
 

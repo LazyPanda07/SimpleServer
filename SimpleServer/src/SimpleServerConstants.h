@@ -22,6 +22,8 @@ namespace simple_server
 			inline const std::string stopApplicationKey = "stopApplication";
 			inline const std::string stoppingApplicationKey = "stoppingApplication";
 			inline const std::string chooseApplicationFolderKey = "chooseApplicationFolder";
+			inline const std::string changeFolderErrorKey = "changeFolderError";
+			inline const std::string errorTitleKey = "errorTitle";
 		}
 	}
 }

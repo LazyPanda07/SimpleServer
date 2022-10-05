@@ -1,6 +1,8 @@
 {
   "startApplication": "Start application",
   "stopApplication": "Stop application",
-  "stoppingApplication": "Stopping application",
-  "chooseApplicationFolder": "Choose application folder"
+  "stoppingApplication": "Stopping application...",
+  "chooseApplicationFolder": "Choose application folder",
+  "changeFolderError": "Application is running",
+  "errorTitle": "Error"
 }
