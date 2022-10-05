@@ -1,2 +1,6 @@
 {
+  "stopApplication": "Остановить приложение",
+  "chooseApplicationFolder": "Выбрать папку приложения",
+  "startApplication": "Запустить приложение",
+  "stoppingApplication": "Остановка приложения..."
 }

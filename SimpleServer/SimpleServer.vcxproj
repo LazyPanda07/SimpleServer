@@ -98,9 +98,17 @@ xcopy /y $(SolutionDir)ProjectLocalization\intermediate\SimpleServerLocalization
 xcopy /y $(ProjectDir)*.json $(OutDir)
 del /q $(OutDir)*.lib
 del /q $(OutDir)*exp
-xcopy /y $(SolutionDir)ProjectLocalization\intermediate\SimpleServerLocalization.dll $(OutDir)</Command>
+xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\SimpleServerLocalization.dll $(OutDir)</Command>
       <Outputs>output.txt</Outputs>
     </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
@@ -117,6 +125,7 @@ xcopy /y $(SolutionDir)ProjectLocalization\intermediate\SimpleServerLocalization
   </ItemGroup>
   <ItemGroup>
     <None Include="gui_framework.json" />
+    <None Include="localization_modules.json" />
     <None Include="simple_server_configuration.json" />
   </ItemGroup>
   <ItemGroup>

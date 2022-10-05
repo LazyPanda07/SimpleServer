@@ -24,13 +24,15 @@ namespace simple_server
 
 	void MainWindow::createMarkup()
 	{
-		serverButton = new gui_framework::Button(L"Start", L"Start server", gui_framework::utility::ComponentSettings(10, 10, 200, 30), this, bind(&MainWindow::changeServerState, this));
+		localization::WTextLocalization& localization = localization::WTextLocalization::get();
+
+		serverButton = new gui_framework::Button(L"Start", localization[constants::localization_keys::startApplicationKey], gui_framework::utility::ComponentSettings(10, 10, 200, 30), this, bind(&MainWindow::changeServerState, this));
 
 		serverButton->setBackgroundColor(255, 0, 0);
 
 		unique_ptr<gui_framework::Menu>& menu = this->createMainMenu(L"Menu");
 
-		menu->addMenuItem(make_unique<gui_framework::MenuItem>(L"Choose server folder", [this]()
+		menu->addMenuItem(make_unique<gui_framework::MenuItem>(localization[constants::localization_keys::chooseApplicationFolderKey], [this]()
 			{
 				if (serverFolderDialog->Show(nullptr) != S_OK)
 				{
@@ -60,18 +62,28 @@ namespace simple_server
 		json::JSONParser simpleServerConfiguration = ifstream(constants::simpleServerConfiguration);
 
 		const string& pathToLastApp = simpleServerConfiguration.getString(constants::settings::pathToLastAppSetting);
+		const string& language = simpleServerConfiguration.getString(constants::settings::language);
 
 		if (filesystem::exists(pathToLastApp))
 		{
 			currentServerFolder = pathToLastApp;
 		}
+
+		localization::TextLocalization::get().changeLanguage(language);
+		localization::WTextLocalization::get().changeLanguage(language);
 	}
 
 	bool MainWindow::onClose()
 	{
-		if (json::JSONParser(constants::simpleServerConfiguration).getString(constants::settings::pathToLastAppSetting) != currentServerFolder.string())
+		json::JSONParser configuration = ifstream(constants::simpleServerConfiguration);
+
+		if (configuration.getString(constants::settings::pathToLastAppSetting) != currentServerFolder.string())
 		{
-			ofstream(constants::simpleServerConfiguration) << json::JSONBuilder(CP_UTF8).appendString(constants::settings::pathToLastAppSetting, currentServerFolder.string());
+			json::JSONBuilder updateLastAppSetting(configuration.getParsedData(), CP_UTF8);
+			
+			updateLastAppSetting[constants::settings::pathToLastAppSetting] = currentServerFolder.string();
+
+			ofstream(constants::simpleServerConfiguration) << updateLastAppSetting;
 		}
 
 		return true;
@@ -86,6 +98,8 @@ namespace simple_server
 
 	void MainWindow::startServer()
 	{
+		localization::WTextLocalization& localization = localization::WTextLocalization::get();
+
 		try
 		{
 			if (!server || (server && server->getConfigurationJSONFile() != filesystem::path(currentServerFolder) / constants::webFrameworkConfiguration))
@@ -104,28 +118,30 @@ namespace simple_server
 
 		serverState = true;
 
-		serverButton->setText(L"Stop server");
+		serverButton->setText(localization[constants::localization_keys::stopApplicationKey]);
 
 		serverButton->setBackgroundColor(0, 255, 0);
 	}
 
 	void MainWindow::stopServer()
 	{
-		serverButton->setText(L"Stopping server...");
+		localization::WTextLocalization& localization = localization::WTextLocalization::get();
+
+		serverButton->setText(localization[constants::localization_keys::stoppingApplicationKey]);
 
 		serverButton->setBackgroundColor(128, 128, 128);
 
 		serverButton->disable();
 
-		thread([this]()
+		thread([this, &localization]()
 			{
 				server->stopServer();
 
 				serverState = false;
 
-				gui_framework::GUIFramework::runOnUIThread([this]()
+				gui_framework::GUIFramework::runOnUIThread([this, &localization]()
 					{
-						serverButton->setText(L"Start server");
+						serverButton->setText(localization[constants::localization_keys::startApplicationKey]);
 
 						serverButton->setBackgroundColor(255, 0, 0);
 

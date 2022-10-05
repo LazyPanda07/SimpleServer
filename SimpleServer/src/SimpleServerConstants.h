@@ -12,7 +12,16 @@ namespace simple_server
 
 		namespace settings
 		{
+			inline const std::string language = "language";
 			inline const std::string pathToLastAppSetting = "pathToLastApp";
+		}
+
+		namespace localization_keys
+		{
+			inline const std::string startApplicationKey = "startApplication";
+			inline const std::string stopApplicationKey = "stopApplication";
+			inline const std::string stoppingApplicationKey = "stoppingApplication";
+			inline const std::string chooseApplicationFolderKey = "chooseApplicationFolder";
 		}
 	}
 }

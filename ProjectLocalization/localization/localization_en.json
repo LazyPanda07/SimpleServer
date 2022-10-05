@@ -1,2 +1,6 @@
 {
+  "startApplication": "Start application",
+  "stopApplication": "Stop application",
+  "stoppingApplication": "Stopping application",
+  "chooseApplicationFolder": "Choose application folder"
 }
