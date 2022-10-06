@@ -38,6 +38,8 @@ namespace simple_server
 
 		void chooseApplicationFolder();
 
+		void updateCurrentApplicationName();
+
 		void updateRAMUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess);
 
 		void updateCPUUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess);

@@ -66,6 +66,8 @@ namespace simple_server
 		if (filesystem::exists(pathToLastApp))
 		{
 			currentServerFolder = pathToLastApp;
+
+			this->updateCurrentApplicationName();
 		}
 
 		updatePeriod = simpleServerConfiguration.getDouble(constants::settings::updateStatsPeriodInSeconds);
@@ -127,9 +129,16 @@ namespace simple_server
 		if (serverFolder->GetDisplayName(SIGDN::SIGDN_DESKTOPABSOLUTEEDITING, &pathToFolder) == S_OK)
 		{
 			currentServerFolder = pathToFolder;
+
+			this->updateCurrentApplicationName();
 		}
 
 		CoTaskMemFree(pathToFolder);
+	}
+
+	void MainWindow::updateCurrentApplicationName()
+	{
+		SetWindowTextW(handle, format(L"{} - {}", windowName, currentServerFolder.wstring()).data());
 	}
 
 	void MainWindow::updateRAMUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess)
