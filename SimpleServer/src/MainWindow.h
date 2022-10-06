@@ -32,7 +32,11 @@ namespace simple_server
 
 		void applyConfiguration();
 
+		void registerHotkeys();
+
 		bool onClose();
+
+		void chooseApplicationFolder();
 
 		void updateRAMUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess);
 

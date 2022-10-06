@@ -32,36 +32,10 @@ namespace simple_server
 		unique_ptr<gui_framework::Menu>& menu = this->createMainMenu(L"Menu");
 		HANDLE currentProcess = GetCurrentProcess();
 
-		menu->addMenuItem(make_unique<gui_framework::MenuItem>(localization[constants::localization_keys::chooseApplicationFolderKey], [this]()
-			{
-				if (server && server->getServerState())
-				{
-					utility::showError(runtime_error(localization::TextLocalization::get()[constants::localization_keys::changeFolderErrorKey]));
-
-					return;
-				}
-
-				if (serverFolderDialog->Show(nullptr) != S_OK)
-				{
-					return;
-				}
-
-				if (serverFolderDialog->GetResult(&serverFolder) != S_OK)
-				{
-					serverFolder = nullptr;
-
-					return;
-				}
-
-				PWSTR pathToFolder;
-
-				if (serverFolder->GetDisplayName(SIGDN::SIGDN_DESKTOPABSOLUTEEDITING, &pathToFolder) == S_OK)
-				{
-					currentServerFolder = pathToFolder;
-				}
-
-				CoTaskMemFree(pathToFolder);
-			}));
+		menu->addMenuItem
+		(
+			make_unique<gui_framework::MenuItem>(localization[constants::localization_keys::chooseApplicationFolderKey], bind(&MainWindow::chooseApplicationFolder, this))
+		);
 
 		serverButton = new gui_framework::Button(L"Start", localization[constants::localization_keys::startApplicationKey], ComponentSettings(10, 10, 200, 30), this, bind(&MainWindow::changeServerState, this));
 
@@ -100,6 +74,17 @@ namespace simple_server
 		localization::WTextLocalization::get().changeLanguage(language);
 	}
 
+	void MainWindow::registerHotkeys()
+	{
+		gui_framework::GUIFramework& instance = gui_framework::GUIFramework::get();
+
+		instance.registerHotkey(VK_F5, bind(&MainWindow::changeServerState, this));
+
+		instance.registerHotkey(VK_ESCAPE, bind(&MainWindow::stopServer, this));
+
+		instance.registerHotkey(0x4F, bind(&MainWindow::chooseApplicationFolder, this), { gui_framework::hotkeys::additionalKeys::control });
+	}
+
 	bool MainWindow::onClose()
 	{
 		json::JSONParser configuration = ifstream(constants::simpleServerConfiguration);
@@ -114,6 +99,37 @@ namespace simple_server
 		}
 
 		return true;
+	}
+
+	void MainWindow::chooseApplicationFolder()
+	{
+		if (server && server->getServerState())
+		{
+			utility::showError(runtime_error(localization::TextLocalization::get()[constants::localization_keys::changeFolderErrorKey]));
+
+			return;
+		}
+
+		if (serverFolderDialog->Show(nullptr) != S_OK)
+		{
+			return;
+		}
+
+		if (serverFolderDialog->GetResult(&serverFolder) != S_OK)
+		{
+			serverFolder = nullptr;
+
+			return;
+		}
+
+		PWSTR pathToFolder;
+
+		if (serverFolder->GetDisplayName(SIGDN::SIGDN_DESKTOPABSOLUTEEDITING, &pathToFolder) == S_OK)
+		{
+			currentServerFolder = pathToFolder;
+		}
+
+		CoTaskMemFree(pathToFolder);
 	}
 
 	void MainWindow::updateRAMUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess)
@@ -234,6 +250,11 @@ namespace simple_server
 
 	void MainWindow::stopServer()
 	{
+		if (!serverState)
+		{
+			return;
+		}
+
 		localization::WTextLocalization& localization = localization::WTextLocalization::get();
 
 		serverButton->setText(localization[constants::localization_keys::stoppingApplicationKey]);
@@ -308,6 +329,8 @@ namespace simple_server
 		this->applyConfiguration();
 
 		this->createMarkup();
+
+		this->registerHotkeys();
 
 		serverFolderDialog->SetOptions(FOS_PICKFOLDERS | FOS_PATHMUSTEXIST);
 
