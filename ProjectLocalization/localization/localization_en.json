@@ -4,5 +4,7 @@
   "stoppingApplication": "Stopping application...",
   "chooseApplicationFolder": "Choose application folder",
   "changeFolderError": "Application is running",
-  "errorTitle": "Error"
+  "errorTitle": "Error",
+  "memoryUsageDescription": "used",
+  "MiB": "MiB"
 }

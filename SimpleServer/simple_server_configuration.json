@@ -1,4 +1,5 @@
 {
   "language": "en",
-  "pathToLastApp": ""
+  "pathToLastApp": "",
+  "updateStatsPeriodInSeconds": 2.5
 }

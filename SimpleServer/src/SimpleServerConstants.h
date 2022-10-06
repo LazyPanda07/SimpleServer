@@ -14,6 +14,7 @@ namespace simple_server
 		{
 			inline const std::string language = "language";
 			inline const std::string pathToLastAppSetting = "pathToLastApp";
+			inline const std::string updateStatsPeriodInSeconds = "updateStatsPeriodInSeconds";
 		}
 
 		namespace localization_keys
@@ -24,6 +25,8 @@ namespace simple_server
 			inline const std::string chooseApplicationFolderKey = "chooseApplicationFolder";
 			inline const std::string changeFolderErrorKey = "changeFolderError";
 			inline const std::string errorTitleKey = "errorTitle";
+			inline const std::string memoryUsageDescriptionKey = "memoryUsageDescription";
+			inline const std::string MiBKey = "MiB";
 		}
 	}
 }

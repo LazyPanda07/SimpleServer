@@ -2,6 +2,8 @@
 
 #include <fstream>
 
+#include <psapi.h>
+
 #include "MenuItems/MenuItem.h"
 #include "Utility.h"
 #include "SimpleServerConstants.h"
@@ -24,8 +26,11 @@ namespace simple_server
 
 	void MainWindow::createMarkup()
 	{
+		using gui_framework::utility::ComponentSettings;
+
 		localization::WTextLocalization& localization = localization::WTextLocalization::get();
 		unique_ptr<gui_framework::Menu>& menu = this->createMainMenu(L"Menu");
+		HANDLE currentProcess = GetCurrentProcess();
 
 		menu->addMenuItem(make_unique<gui_framework::MenuItem>(localization[constants::localization_keys::chooseApplicationFolderKey], [this]()
 			{
@@ -58,9 +63,23 @@ namespace simple_server
 				CoTaskMemFree(pathToFolder);
 			}));
 
-		serverButton = new gui_framework::Button(L"Start", localization[constants::localization_keys::startApplicationKey], gui_framework::utility::ComponentSettings(10, 10, 200, 30), this, bind(&MainWindow::changeServerState, this));
+		serverButton = new gui_framework::Button(L"Start", localization[constants::localization_keys::startApplicationKey], ComponentSettings(10, 10, 200, 30), this, bind(&MainWindow::changeServerState, this));
 
 		serverButton->setBackgroundColor(255, 0, 0);
+
+		gui_framework::StaticControl* ramUsage = new gui_framework::StaticControl(L"RAMUsage", L"", ComponentSettings(300, 10, 200, 20), this);
+		gui_framework::StaticControl* cpuUsage = new gui_framework::StaticControl(L"CPUUsage", L"", ComponentSettings(300, 30, 200, 20), this);
+
+		ramUsage->setBackgroundColor(240, 240, 240);
+		cpuUsage->setBackgroundColor(240, 240, 240);
+
+		gui_framework::utility::removeStyle(ramUsage->getHandle(), WS_BORDER);
+
+		gui_framework::utility::removeStyle(cpuUsage->getHandle(), WS_BORDER);
+
+		this->updateRAMUsage(ramUsage, currentProcess);
+
+		this->updateCPUUsage(cpuUsage, currentProcess);
 	}
 
 	void MainWindow::applyConfiguration()
@@ -74,6 +93,8 @@ namespace simple_server
 		{
 			currentServerFolder = pathToLastApp;
 		}
+
+		updatePeriod = simpleServerConfiguration.getDouble(constants::settings::updateStatsPeriodInSeconds);
 
 		localization::TextLocalization::get().changeLanguage(language);
 		localization::WTextLocalization::get().changeLanguage(language);
@@ -93,6 +114,88 @@ namespace simple_server
 		}
 
 		return true;
+	}
+
+	void MainWindow::updateRAMUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess)
+	{
+		localization::WTextLocalization& localization = localization::WTextLocalization::get();
+
+		thread([this, staticControl, currentProcess, &localization]()
+			{
+				while (true)
+				{
+					PROCESS_MEMORY_COUNTERS_EX memory = {};
+
+					GetProcessMemoryInfo(currentProcess, reinterpret_cast<PROCESS_MEMORY_COUNTERS*>(&memory), sizeof(memory));
+
+					staticControl->setText
+					(
+						format
+						(
+							L"{:.1f} {} {}",
+							static_cast<double>(memory.PrivateUsage) / 1024 / 1024,
+							localization[constants::localization_keys::MiBKey],
+							localization[constants::localization_keys::memoryUsageDescriptionKey]
+						)
+					);
+
+					this_thread::sleep_for(chrono::duration<double>(updatePeriod));
+				}
+			}).detach();
+	}
+
+	void MainWindow::updateCPUUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess)
+	{
+		static ULARGE_INTEGER lastCPU;
+		static ULARGE_INTEGER lastSysCPU;
+		static ULARGE_INTEGER lastUserCPU;
+		static DWORD numProcessors;
+
+		FILETIME ftime;
+		FILETIME fsys;
+		FILETIME fuser;
+
+		SYSTEM_INFO sysInfo;
+		GetSystemInfo(&sysInfo);
+		numProcessors = sysInfo.dwNumberOfProcessors;
+
+		GetSystemTimeAsFileTime(&ftime);
+		memcpy(&lastCPU, &ftime, sizeof(ftime));
+
+		GetProcessTimes(currentProcess, &ftime, &ftime, &fsys, &fuser);
+		memcpy(&lastSysCPU, &fsys, sizeof(fsys));
+		memcpy(&lastUserCPU, &fuser, sizeof(fuser));
+
+		thread([this, staticControl, currentProcess]()
+			{
+				while (true)
+				{
+					ULARGE_INTEGER now;
+					ULARGE_INTEGER sys;
+					ULARGE_INTEGER user;
+					FILETIME ftime;
+					FILETIME fsys;
+					FILETIME fuser;
+					double percent;
+
+					GetSystemTimeAsFileTime(&ftime);
+					memcpy(&now, &ftime, sizeof(ftime));
+
+					GetProcessTimes(currentProcess, &ftime, &ftime, &fsys, &fuser);
+					memcpy(&sys, &fsys, sizeof(fsys));
+					memcpy(&user, &fuser, sizeof(fuser));
+
+					percent = static_cast<double>((sys.QuadPart - lastSysCPU.QuadPart) + (user.QuadPart - lastUserCPU.QuadPart)) / (now.QuadPart - lastCPU.QuadPart) / numProcessors;
+
+					lastCPU = now;
+					lastUserCPU = user;
+					lastSysCPU = sys;
+
+					staticControl->setText(format(L"{:.1f}% CPU", percent >= 0.0f ? (percent * 100.0) : 0.0));
+
+					this_thread::sleep_for(chrono::duration<double>(updatePeriod));
+				}
+			}).detach();
 	}
 
 	void MainWindow::changeServerState()
@@ -175,6 +278,12 @@ namespace simple_server
 		serverState(false)
 	{
 		setExitMode(exitMode::quit);
+
+		gui_framework::utility::removeStyle(handle, WS_MAXIMIZEBOX);
+
+		gui_framework::utility::removeStyle(handle, WS_THICKFRAME);
+
+		setBackgroundColor(240, 240, 240);
 
 		this->setOnClose(bind(&MainWindow::onClose, this));
 

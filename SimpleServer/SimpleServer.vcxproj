@@ -70,7 +70,7 @@
     </Link>
     <CustomBuildStep>
       <Command>xcopy /y $(SolutionDir)WebFrameworkLibrary\WebFramework\dlls\*.* $(OutDir)
-xcopy /y $(SolutionDir)ProjectLocalization\intermediate\SimpleServerLocalization.dll $(OutDir)</Command>
+xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\SimpleServerLocalization.dll $(OutDir)</Command>
       <Outputs>output.txt</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>

@@ -20,9 +20,12 @@ namespace simple_server
 		std::filesystem::path currentServerFolder;
 		IFileDialog* serverFolderDialog;
 		IShellItem* serverFolder;
-		gui_framework::Button* serverButton;
 		std::unique_ptr<framework::WebFramework> server;
 		bool serverState;
+		double updatePeriod;
+
+	private:
+		gui_framework::Button* serverButton;
 
 	private:
 		void createMarkup();
@@ -30,6 +33,10 @@ namespace simple_server
 		void applyConfiguration();
 
 		bool onClose();
+
+		void updateRAMUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess);
+
+		void updateCPUUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess);
 
 	private:
 		void changeServerState();
