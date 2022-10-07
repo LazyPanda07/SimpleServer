@@ -161,7 +161,7 @@ namespace simple_server
 
 		for (const string& moduleToAdd : json::utility::JSONArrayWrapper(applicationLocalizationModules.getArray(constants::settings::modulesSetting)).getAsStringArray())
 		{
-			manager.addModule(moduleToAdd);
+			manager.addModule(filesystem::path(moduleToAdd).filename().string(), currentApplicationFolder / (moduleToAdd + ".dll"));
 		}
 
 		SetWindowTextW(handle, format(L"{} - {}", windowName, currentApplicationFolder.wstring()).data());

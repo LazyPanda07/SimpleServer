@@ -70,7 +70,8 @@
     </Link>
     <CustomBuildStep>
       <Command>xcopy /y $(SolutionDir)WebFrameworkLibrary\WebFramework\dlls\*.* $(OutDir)
-xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\SimpleServerLocalization.dll $(OutDir)</Command>
+xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\SimpleServerLocalization.dll $(OutDir)
+xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\Localization.dll $(OutDir)</Command>
       <Outputs>output.txt</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
@@ -98,7 +99,8 @@ xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\SimpleServe
 xcopy /y $(ProjectDir)*.json $(OutDir)
 del /q $(OutDir)*.lib
 del /q $(OutDir)*exp
-xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\SimpleServerLocalization.dll $(OutDir)</Command>
+xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\SimpleServerLocalization.dll $(OutDir)
+xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\Localization.dll $(OutDir)</Command>
       <Outputs>output.txt</Outputs>
     </CustomBuildStep>
     <PostBuildEvent>

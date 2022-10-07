@@ -1,10 +1,10 @@
 {
-  "memoryUsageDescription": "использовано",
-  "MiB": "МиБ",
   "errorTitle": "Ошибка",
+  "MiB": "МиБ",
+  "memoryUsageDescription": "использовано",
   "stopApplication": "Остановить приложение",
   "changeFolderError": "Приложение запущено",
   "startApplication": "Запустить приложение",
-  "chooseApplicationFolder": "Выбрать папку приложения",
-  "stoppingApplication": "Остановка приложения..."
+  "stoppingApplication": "Остановка приложения...",
+  "chooseApplicationFolder": "Выбрать папку приложения"
 }
