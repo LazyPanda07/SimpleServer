@@ -17,15 +17,15 @@ namespace simple_server
 		static int getCenterY(int height);
 
 	private:
-		std::filesystem::path currentServerFolder;
-		IFileDialog* serverFolderDialog;
-		IShellItem* serverFolder;
+		std::filesystem::path currentApplicationFolder;
+		IFileDialog* applicationFolderDialog;
+		IShellItem* applicationFolder;
 		std::unique_ptr<framework::WebFramework> server;
 		bool serverState;
 		double updatePeriod;
 
 	private:
-		gui_framework::Button* serverButton;
+		gui_framework::Button* startStopApplicationButton;
 
 	private:
 		void createMarkup();
@@ -38,7 +38,7 @@ namespace simple_server
 
 		void chooseApplicationFolder();
 
-		void updateCurrentApplicationName();
+		void onCurrentApplicationFolderChange(const std::filesystem::path& previousApplicationFolder);
 
 		void updateRAMUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess);
 

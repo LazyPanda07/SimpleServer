@@ -2,6 +2,7 @@
 
 #include "CompositesHeader.h"
 #include "SimpleServerConstants.h"
+#include "Exceptions/FileDoesNotExistException.h"
 
 using namespace std;
 
@@ -19,6 +20,14 @@ namespace simple_server
 				localization::WTextLocalization::get()[constants::localization_keys::errorTitleKey],
 				BaseDialogBox::messageBoxType::ok
 			);
+		}
+
+		void throwExceptionIfFileDoesNotExist(const filesystem::path& pathToFile)
+		{
+			if (!filesystem::exists(pathToFile))
+			{
+				throw file_manager::exceptions::FileDoesNotExistException(pathToFile);
+			}
 		}
 	}
 }

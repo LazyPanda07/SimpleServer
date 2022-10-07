@@ -1,12 +1,12 @@
 #include "MainWindow.h"
 
 #include <fstream>
-
 #include <psapi.h>
 
 #include "MenuItems/MenuItem.h"
 #include "Utility.h"
 #include "SimpleServerConstants.h"
+#include "MultiLocalizationManager.h"
 
 using namespace std;
 
@@ -37,9 +37,9 @@ namespace simple_server
 			make_unique<gui_framework::MenuItem>(localization[constants::localization_keys::chooseApplicationFolderKey], bind(&MainWindow::chooseApplicationFolder, this))
 		);
 
-		serverButton = new gui_framework::Button(L"Start", localization[constants::localization_keys::startApplicationKey], ComponentSettings(10, 10, 200, 30), this, bind(&MainWindow::changeServerState, this));
+		startStopApplicationButton = new gui_framework::Button(L"Start", localization[constants::localization_keys::startApplicationKey], ComponentSettings(10, 10, 200, 30), this, bind(&MainWindow::changeServerState, this));
 
-		serverButton->setBackgroundColor(255, 0, 0);
+		startStopApplicationButton->setBackgroundColor(255, 0, 0);
 
 		gui_framework::StaticControl* ramUsage = new gui_framework::StaticControl(L"RAMUsage", L"", ComponentSettings(300, 10, 200, 20), this);
 		gui_framework::StaticControl* cpuUsage = new gui_framework::StaticControl(L"CPUUsage", L"", ComponentSettings(300, 30, 200, 20), this);
@@ -61,16 +61,18 @@ namespace simple_server
 		json::JSONParser simpleServerConfiguration = ifstream(constants::simpleServerConfiguration);
 
 		const string& pathToLastApp = simpleServerConfiguration.getString(constants::settings::pathToLastAppSetting);
-		const string& language = simpleServerConfiguration.getString(constants::settings::language);
+		const string& language = simpleServerConfiguration.getString(constants::settings::languageSetting);
 
 		if (filesystem::exists(pathToLastApp))
 		{
-			currentServerFolder = pathToLastApp;
+			filesystem::path previousApplicatorFolder = currentApplicationFolder;
 
-			this->updateCurrentApplicationName();
+			currentApplicationFolder = pathToLastApp;
+
+			this->onCurrentApplicationFolderChange(previousApplicatorFolder);
 		}
 
-		updatePeriod = simpleServerConfiguration.getDouble(constants::settings::updateStatsPeriodInSeconds);
+		updatePeriod = simpleServerConfiguration.getDouble(constants::settings::updateStatsPeriodInSecondsSetting);
 
 		localization::TextLocalization::get().changeLanguage(language);
 		localization::WTextLocalization::get().changeLanguage(language);
@@ -91,11 +93,11 @@ namespace simple_server
 	{
 		json::JSONParser configuration = ifstream(constants::simpleServerConfiguration);
 
-		if (configuration.getString(constants::settings::pathToLastAppSetting) != currentServerFolder.string())
+		if (configuration.getString(constants::settings::pathToLastAppSetting) != currentApplicationFolder.string())
 		{
 			json::JSONBuilder updateLastAppSetting(configuration.getParsedData(), CP_UTF8);
 			
-			updateLastAppSetting[constants::settings::pathToLastAppSetting] = currentServerFolder.string();
+			updateLastAppSetting[constants::settings::pathToLastAppSetting] = currentApplicationFolder.string();
 
 			ofstream(constants::simpleServerConfiguration) << updateLastAppSetting;
 		}
@@ -112,33 +114,57 @@ namespace simple_server
 			return;
 		}
 
-		if (serverFolderDialog->Show(nullptr) != S_OK)
+		if (applicationFolderDialog->Show(nullptr) != S_OK)
 		{
 			return;
 		}
 
-		if (serverFolderDialog->GetResult(&serverFolder) != S_OK)
+		if (applicationFolderDialog->GetResult(&applicationFolder) != S_OK)
 		{
-			serverFolder = nullptr;
+			applicationFolder = nullptr;
 
 			return;
 		}
 
 		PWSTR pathToFolder;
 
-		if (serverFolder->GetDisplayName(SIGDN::SIGDN_DESKTOPABSOLUTEEDITING, &pathToFolder) == S_OK)
+		if (applicationFolder->GetDisplayName(SIGDN::SIGDN_DESKTOPABSOLUTEEDITING, &pathToFolder) == S_OK)
 		{
-			currentServerFolder = pathToFolder;
+			filesystem::path previousApplicatorFolder = currentApplicationFolder;
 
-			this->updateCurrentApplicationName();
+			currentApplicationFolder = pathToFolder;
+
+			this->onCurrentApplicationFolderChange(previousApplicatorFolder);
 		}
 
 		CoTaskMemFree(pathToFolder);
 	}
 
-	void MainWindow::updateCurrentApplicationName()
+	void MainWindow::onCurrentApplicationFolderChange(const filesystem::path& previousApplicationFolder)
 	{
-		SetWindowTextW(handle, format(L"{} - {}", windowName, currentServerFolder.wstring()).data());
+		utility::throwExceptionIfFileDoesNotExist(currentApplicationFolder / constants::applicationLocalizationModules);
+
+		json::JSONParser applicationLocalizationModules;
+		localization::MultiLocalizationManager& manager = localization::MultiLocalizationManager::getManager();
+
+		if (filesystem::exists(previousApplicationFolder / constants::applicationLocalizationModules))
+		{
+			applicationLocalizationModules.setJSONData(ifstream(previousApplicationFolder / constants::applicationLocalizationModules));
+
+			for (const string& moduleToRemove : json::utility::JSONArrayWrapper(applicationLocalizationModules.getArray(constants::settings::modulesSetting)).getAsStringArray())
+			{
+				manager.removeModule(moduleToRemove);
+			}
+		}
+
+		applicationLocalizationModules.setJSONData(ifstream(currentApplicationFolder / constants::applicationLocalizationModules));
+
+		for (const string& moduleToAdd : json::utility::JSONArrayWrapper(applicationLocalizationModules.getArray(constants::settings::modulesSetting)).getAsStringArray())
+		{
+			manager.addModule(moduleToAdd);
+		}
+
+		SetWindowTextW(handle, format(L"{} - {}", windowName, currentApplicationFolder.wstring()).data());
 	}
 
 	void MainWindow::updateRAMUsage(gui_framework::StaticControl* staticControl, HANDLE currentProcess)
@@ -236,9 +262,9 @@ namespace simple_server
 
 		try
 		{
-			if (!server || (server && server->getConfigurationJSONFile() != filesystem::path(currentServerFolder) / constants::webFrameworkConfiguration))
+			if (!server || (server && server->getConfigurationJSONFile() != filesystem::path(currentApplicationFolder) / constants::webFrameworkConfiguration))
 			{
-				server = make_unique<framework::WebFramework>(filesystem::path(currentServerFolder) / constants::webFrameworkConfiguration);
+				server = make_unique<framework::WebFramework>(filesystem::path(currentApplicationFolder) / constants::webFrameworkConfiguration);
 			}
 		}
 		catch (const exception& e)
@@ -252,9 +278,9 @@ namespace simple_server
 
 		serverState = true;
 
-		serverButton->setText(localization[constants::localization_keys::stopApplicationKey]);
+		startStopApplicationButton->setText(localization[constants::localization_keys::stopApplicationKey]);
 
-		serverButton->setBackgroundColor(0, 255, 0);
+		startStopApplicationButton->setBackgroundColor(0, 255, 0);
 	}
 
 	void MainWindow::stopServer()
@@ -266,11 +292,11 @@ namespace simple_server
 
 		localization::WTextLocalization& localization = localization::WTextLocalization::get();
 
-		serverButton->setText(localization[constants::localization_keys::stoppingApplicationKey]);
+		startStopApplicationButton->setText(localization[constants::localization_keys::stoppingApplicationKey]);
 
-		serverButton->setBackgroundColor(128, 128, 128);
+		startStopApplicationButton->setBackgroundColor(128, 128, 128);
 
-		serverButton->disable();
+		startStopApplicationButton->disable();
 
 		thread([this, &localization]()
 			{
@@ -280,11 +306,11 @@ namespace simple_server
 
 				gui_framework::GUIFramework::runOnUIThread([this, &localization]()
 					{
-						serverButton->setText(localization[constants::localization_keys::startApplicationKey]);
+						startStopApplicationButton->setText(localization[constants::localization_keys::startApplicationKey]);
 
-						serverButton->setBackgroundColor(255, 0, 0);
+						startStopApplicationButton->setBackgroundColor(255, 0, 0);
 
-						serverButton->enable();
+						startStopApplicationButton->enable();
 					});
 			}).detach();
 	}
@@ -303,8 +329,8 @@ namespace simple_server
 			),
 			"MainWindow"
 		),
-		currentServerFolder(filesystem::current_path()),
-		serverFolder(nullptr),
+		currentApplicationFolder(filesystem::current_path()),
+		applicationFolder(nullptr),
 		serverState(false)
 	{
 		setExitMode(exitMode::quit);
@@ -317,7 +343,7 @@ namespace simple_server
 
 		this->setOnClose(bind(&MainWindow::onClose, this));
 
-		switch (CoCreateInstance(CLSID_FileOpenDialog, nullptr, tagCLSCTX::CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&serverFolderDialog)))
+		switch (CoCreateInstance(CLSID_FileOpenDialog, nullptr, tagCLSCTX::CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&applicationFolderDialog)))
 		{
 		case S_OK:
 			break;
@@ -332,7 +358,7 @@ namespace simple_server
 			throw runtime_error("The specified class does not implement the requested interface, or the controlling IUnknown does not expose the requested interface");
 
 		case E_POINTER:
-			throw runtime_error("serverFolderDialog is nullptr");
+			throw runtime_error("applicationFolderDialog is nullptr");
 		}
 
 		this->applyConfiguration();
@@ -341,13 +367,13 @@ namespace simple_server
 
 		this->registerHotkeys();
 
-		serverFolderDialog->SetOptions(FOS_PICKFOLDERS | FOS_PATHMUSTEXIST);
+		applicationFolderDialog->SetOptions(FOS_PICKFOLDERS | FOS_PATHMUSTEXIST);
 
 		IShellItem* folder;
 
 		SHCreateItemFromParsingName(filesystem::current_path().wstring().data(), nullptr, IID_PPV_ARGS(&folder));
 
-		serverFolderDialog->SetFolder(folder);
+		applicationFolderDialog->SetFolder(folder);
 
 		folder->Release();
 	}
