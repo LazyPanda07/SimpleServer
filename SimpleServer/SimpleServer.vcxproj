@@ -47,11 +47,13 @@
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
+    <TargetName>Simple Server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
+    <TargetName>Simple Server</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -60,7 +62,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)WebFrameworkLibrary\WebFramework\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\JSON\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\src\;$(SolutionDir)WebFrameworkLibrary\Networks\SocketStreams\src\;$(SolutionDir)WebFrameworkLibrary\Networks\src\;$(SolutionDir)WebFrameworkLibrary\Log\src\;$(SolutionDir)WebFrameworkLibrary\INIParser\src\;$(SolutionDir)WebFrameworkLibrary\ThreadPool\src\;$(SolutionDir)WebFrameworkLibrary\FileManager\src\;$(SolutionDir)WebFrameworkLibrary\Localization\src\;$(SolutionDir)WebFrameworkLibrary\SHA256\src\;$(SolutionDir)WebFrameworkLibrary\BaseTCPServer\src\;$(SolutionDir)WebFrameworkLibrary\Networks\vendor\OpenSSL\include\;$(SolutionDir)GUIFrameworkLibrary\GUIFramework\src\;$(SolutionDir)GUIFrameworkLibrary\JSON\src\;$(SolutionDir)GUIFrameworkLibrary\Localization\src\;$(SolutionDir)GUIFrameworkLibrary\ThreadPool\src\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)WebFrameworkLibrary\WebFramework\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\JSON\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\src\;$(SolutionDir)WebFrameworkLibrary\Networks\SocketStreams\src\;$(SolutionDir)WebFrameworkLibrary\Networks\src\;$(SolutionDir)WebFrameworkLibrary\Log\src\;$(SolutionDir)WebFrameworkLibrary\INIParser\src\;$(SolutionDir)WebFrameworkLibrary\ThreadPool\src\;$(SolutionDir)WebFrameworkLibrary\FileManager\src\;$(SolutionDir)WebFrameworkLibrary\Localization\src\;$(SolutionDir)WebFrameworkLibrary\SHA256\src\;$(SolutionDir)WebFrameworkLibrary\BaseTCPServer\src\;$(SolutionDir)WebFrameworkLibrary\Networks\vendor\OpenSSL\include\;$(SolutionDir)GUIFrameworkLibrary\GUIFramework\src\;$(SolutionDir)GUIFrameworkLibrary\JSON\src\;$(SolutionDir)GUIFrameworkLibrary\Localization\src\;$(SolutionDir)GUIFrameworkLibrary\ThreadPool\src\;$(ProjectDir);$(ProjectDir)src\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -84,7 +86,7 @@ xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\Localizatio
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)WebFrameworkLibrary\WebFramework\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\JSON\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\src\;$(SolutionDir)WebFrameworkLibrary\Networks\SocketStreams\src\;$(SolutionDir)WebFrameworkLibrary\Networks\src\;$(SolutionDir)WebFrameworkLibrary\Log\src\;$(SolutionDir)WebFrameworkLibrary\INIParser\src\;$(SolutionDir)WebFrameworkLibrary\ThreadPool\src\;$(SolutionDir)WebFrameworkLibrary\FileManager\src\;$(SolutionDir)WebFrameworkLibrary\Localization\src\;$(SolutionDir)WebFrameworkLibrary\SHA256\src\;$(SolutionDir)WebFrameworkLibrary\BaseTCPServer\src\;$(SolutionDir)WebFrameworkLibrary\Networks\vendor\OpenSSL\include\;$(SolutionDir)GUIFrameworkLibrary\GUIFramework\src\;$(SolutionDir)GUIFrameworkLibrary\JSON\src\;$(SolutionDir)GUIFrameworkLibrary\Localization\src\;$(SolutionDir)GUIFrameworkLibrary\ThreadPool\src\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)WebFrameworkLibrary\WebFramework\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\JSON\src\;$(SolutionDir)WebFrameworkLibrary\Networks\HTTP\src\;$(SolutionDir)WebFrameworkLibrary\Networks\SocketStreams\src\;$(SolutionDir)WebFrameworkLibrary\Networks\src\;$(SolutionDir)WebFrameworkLibrary\Log\src\;$(SolutionDir)WebFrameworkLibrary\INIParser\src\;$(SolutionDir)WebFrameworkLibrary\ThreadPool\src\;$(SolutionDir)WebFrameworkLibrary\FileManager\src\;$(SolutionDir)WebFrameworkLibrary\Localization\src\;$(SolutionDir)WebFrameworkLibrary\SHA256\src\;$(SolutionDir)WebFrameworkLibrary\BaseTCPServer\src\;$(SolutionDir)WebFrameworkLibrary\Networks\vendor\OpenSSL\include\;$(SolutionDir)GUIFrameworkLibrary\GUIFramework\src\;$(SolutionDir)GUIFrameworkLibrary\JSON\src\;$(SolutionDir)GUIFrameworkLibrary\Localization\src\;$(SolutionDir)GUIFrameworkLibrary\ThreadPool\src\;$(ProjectDir);$(ProjectDir)src\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -131,9 +133,16 @@ xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\Localizatio
     <None Include="simple_server_configuration.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\MainWindow.h" />
     <ClInclude Include="src\SimpleServerConstants.h" />
     <ClInclude Include="src\Utility.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SimpleServer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\Server.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

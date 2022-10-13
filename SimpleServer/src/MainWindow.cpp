@@ -7,6 +7,7 @@
 #include "Utility.h"
 #include "SimpleServerConstants.h"
 #include "MultiLocalizationManager.h"
+#include "resource.h"
 
 using namespace std;
 
@@ -327,7 +328,12 @@ namespace simple_server
 				800,
 				600
 			),
-			"MainWindow"
+			"MainWindow",
+			false,
+			false,
+			"",
+			APP_ICON,
+			APP_ICON
 		),
 		currentApplicationFolder(filesystem::current_path()),
 		applicationFolder(nullptr),

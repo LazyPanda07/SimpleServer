@@ -43,3 +43,6 @@ SimpleServer/logs/
 
 # Localization
 ProjectLocalization/intermediate/
+
+# Resources
+*.aps
