@@ -103,6 +103,8 @@ namespace simple_server
 			ofstream(constants::simpleServerConfiguration) << updateLastAppSetting;
 		}
 
+		this->stopServer();
+
 		return true;
 	}
 
