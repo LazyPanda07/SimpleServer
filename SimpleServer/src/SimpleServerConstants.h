@@ -10,7 +10,7 @@ namespace simple_server
 
 		inline const std::string simpleServerConfiguration = "simple_server_configuration.json";
 
-		inline const std::string applicationLocalizationModules = "application_localization_modules.json";
+		inline const std::string applicationLocalizationModules = "app_localization_modules.json";
 
 		namespace settings
 		{
