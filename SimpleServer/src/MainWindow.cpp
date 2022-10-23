@@ -48,10 +48,6 @@ namespace simple_server
 		ramUsage->setBackgroundColor(240, 240, 240);
 		cpuUsage->setBackgroundColor(240, 240, 240);
 
-		gui_framework::utility::removeStyle(ramUsage->getHandle(), WS_BORDER);
-
-		gui_framework::utility::removeStyle(cpuUsage->getHandle(), WS_BORDER);
-
 		this->updateRAMUsage(ramUsage, currentProcess);
 
 		this->updateCPUUsage(cpuUsage, currentProcess);
@@ -343,9 +339,7 @@ namespace simple_server
 	{
 		setExitMode(exitMode::quit);
 
-		gui_framework::utility::removeStyle(handle, WS_MAXIMIZEBOX);
-
-		gui_framework::utility::removeStyle(handle, WS_THICKFRAME);
+		disableResize();
 
 		setBackgroundColor(240, 240, 240);
 
