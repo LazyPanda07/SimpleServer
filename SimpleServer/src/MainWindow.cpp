@@ -134,9 +134,9 @@ namespace simple_server
 			currentApplicationFolder = pathToFolder;
 
 			this->onCurrentApplicationFolderChange(previousApplicatorFolder);
-		}
 
-		CoTaskMemFree(pathToFolder);
+			CoTaskMemFree(pathToFolder);
+		}
 	}
 
 	void MainWindow::onCurrentApplicationFolderChange(const filesystem::path& previousApplicationFolder)
@@ -333,7 +333,6 @@ namespace simple_server
 			APP_ICON,
 			APP_ICON
 		),
-		currentApplicationFolder(filesystem::current_path()),
 		applicationFolder(nullptr),
 		serverState(false)
 	{
