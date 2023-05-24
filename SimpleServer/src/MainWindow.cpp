@@ -320,6 +320,7 @@ namespace simple_server
 			),
 			"MainWindow",
 			APP_ICON,
+			true,
 			false,
 			false,
 			"",
