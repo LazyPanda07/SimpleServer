@@ -4,18 +4,13 @@
 
 #include <shobjidl_core.h>
 
-#include "CompositesHeader.h"
+#include "BaseComposites/StandardComposites/BaseMainWindow.h"
 #include "ComponentsHeader.h"
 
 namespace simple_server
 {
-	class MainWindow : public gui_framework::SeparateWindow
+	class MainWindow : public gui_framework::BaseMainWindow
 	{
-	private:
-		static int getCenterX(int width);
-
-		static int getCenterY(int height);
-
 	private:
 		std::filesystem::path currentApplicationFolder;
 		IFileDialog* applicationFolderDialog;

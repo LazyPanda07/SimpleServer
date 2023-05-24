@@ -16,9 +16,7 @@ int wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 	{
 		gui_framework::GUIFramework::initUIThreadId();
 
-		gui_framework::WindowHolder holder(make_unique<simple_server::MainWindow>());
-		
-		holder.runMainLoop();
+		gui_framework::WindowHolder(make_unique<simple_server::MainWindow>()).runMainLoop();
 	}
 	catch (const exception& e)
 	{

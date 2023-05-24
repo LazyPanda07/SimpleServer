@@ -15,16 +15,6 @@ CREATE_DEFAULT_WINDOW_FUNCTION(MainWindow)
 
 namespace simple_server
 {
-	int MainWindow::getCenterX(int width)
-	{
-		return (GetSystemMetrics(SM_CXSCREEN) - GetSystemMetrics(SM_CXBORDER) - width) / 2;
-	}
-
-	int MainWindow::getCenterY(int height)
-	{
-		return (GetSystemMetrics(SM_CYSCREEN) - GetSystemMetrics(SM_CYBORDER) - height) / 2;
-	}
-
 	void MainWindow::createMarkup()
 	{
 		using gui_framework::utility::ComponentSettings;
@@ -77,13 +67,15 @@ namespace simple_server
 
 	void MainWindow::registerHotkeys()
 	{
+		using gui_framework::hotkeys::keys;
+
 		gui_framework::GUIFramework& instance = gui_framework::GUIFramework::get();
 
-		instance.registerHotkey(VK_F5, bind(&MainWindow::changeServerState, this));
+		instance.registerHotkey(keys::F5, bind(&MainWindow::changeServerState, this));
 
-		instance.registerHotkey(VK_ESCAPE, bind(&MainWindow::stopServer, this));
+		instance.registerHotkey(keys::escape, bind(&MainWindow::stopServer, this));
 
-		instance.registerHotkey(0x4F, bind(&MainWindow::chooseApplicationFolder, this), { gui_framework::hotkeys::additionalKeys::control });
+		instance.registerHotkey(keys::O, bind(&MainWindow::chooseApplicationFolder, this), { gui_framework::hotkeys::additionalKeys::control });
 	}
 
 	bool MainWindow::onClose()
@@ -315,18 +307,19 @@ namespace simple_server
 	}
 
 	MainWindow::MainWindow() :
-		SeparateWindow
+		BaseMainWindow
 		(
 			L"SimpleServer",
 			L"Simple Server",
 			gui_framework::utility::ComponentSettings
 			(
-				MainWindow::getCenterX(800),
-				MainWindow::getCenterY(600),
+				gui_framework::utility::getCenterX(800),
+				gui_framework::utility::getCenterY(600),
 				800,
 				600
 			),
 			"MainWindow",
+			NULL,
 			false,
 			false,
 			"",
@@ -336,8 +329,6 @@ namespace simple_server
 		applicationFolder(nullptr),
 		serverState(false)
 	{
-		setExitMode(exitMode::quit);
-
 		disableResize();
 
 		setBackgroundColor(240, 240, 240);
