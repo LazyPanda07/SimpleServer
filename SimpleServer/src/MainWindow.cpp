@@ -41,6 +41,8 @@ namespace simple_server
 		this->updateRAMUsage(ramUsage, currentProcess);
 
 		this->updateCPUUsage(cpuUsage, currentProcess);
+
+		addTrayMenuItem(L"Exit", [this]() { this->destroyComponent(); });
 	}
 
 	void MainWindow::applyConfiguration()
@@ -78,7 +80,7 @@ namespace simple_server
 		instance.registerHotkey(keys::O, bind(&MainWindow::chooseApplicationFolder, this), { gui_framework::hotkeys::additionalKeys::control });
 	}
 
-	bool MainWindow::onClose()
+	void MainWindow::onDestroyEvent()
 	{
 		json::JSONParser configuration = ifstream(constants::simpleServerConfiguration);
 
@@ -92,8 +94,6 @@ namespace simple_server
 		}
 
 		this->stopServer();
-
-		return true;
 	}
 
 	void MainWindow::chooseApplicationFolder()
@@ -319,7 +319,7 @@ namespace simple_server
 				600
 			),
 			"MainWindow",
-			NULL,
+			APP_ICON,
 			false,
 			false,
 			"",
@@ -332,8 +332,6 @@ namespace simple_server
 		disableResize();
 
 		setBackgroundColor(240, 240, 240);
-
-		this->setOnClose(bind(&MainWindow::onClose, this));
 
 		switch (CoCreateInstance(CLSID_FileOpenDialog, nullptr, tagCLSCTX::CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&applicationFolderDialog)))
 		{

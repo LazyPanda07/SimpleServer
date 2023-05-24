@@ -29,7 +29,7 @@ namespace simple_server
 
 		void registerHotkeys();
 
-		bool onClose();
+		void onDestroyEvent();
 
 		void chooseApplicationFolder();
 
