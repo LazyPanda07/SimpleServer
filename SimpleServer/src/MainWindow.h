@@ -49,6 +49,8 @@ namespace simple_server
 	public:
 		MainWindow();
 
+		void applyCommandLine(PWSTR commandLineArguments);
+
 		~MainWindow() = default;
 	};
 }

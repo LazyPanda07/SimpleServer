@@ -368,4 +368,24 @@ namespace simple_server
 
 		folder->Release();
 	}
+
+	void MainWindow::applyCommandLine(PWSTR commandLineArguments)
+	{
+		int argc;
+		PWSTR* argv = CommandLineToArgvW(commandLineArguments, &argc);
+
+		for (int i = 0; i < argc; i++)
+		{
+			wstring_view command = argv[i];
+
+			if (command == L"-startServer")
+			{
+				this->startServer();
+			}
+			else if (command == L"-tray")
+			{
+				onClose();
+			}
+		}
+	}
 }
