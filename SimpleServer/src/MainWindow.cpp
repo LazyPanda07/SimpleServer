@@ -8,6 +8,7 @@
 #include "SimpleServerConstants.h"
 #include "MultiLocalizationManager.h"
 #include "resource.h"
+#include "GUIFramework.h"
 
 using namespace std;
 
@@ -73,9 +74,9 @@ namespace simple_server
 
 		gui_framework::GUIFramework& instance = gui_framework::GUIFramework::get();
 
-		instance.registerHotkey(keys::F5, bind(&MainWindow::changeServerState, this));
+		instance.registerHotkey(keys::enter, bind(&MainWindow::changeServerState, this));
 
-		instance.registerHotkey(keys::escape, bind(&MainWindow::stopServer, this));
+		instance.registerHotkey(keys::escape, bind(&MainWindow::destroyComponent, this));
 
 		instance.registerHotkey(keys::O, bind(&MainWindow::chooseApplicationFolder, this), { gui_framework::hotkeys::additionalKeys::control });
 	}
@@ -255,6 +256,8 @@ namespace simple_server
 		{
 			if (!server || (server && server->getConfigurationJSONFile() != filesystem::path(currentApplicationFolder) / constants::webFrameworkConfiguration))
 			{
+				SetDllDirectoryW(currentApplicationFolder.wstring().data());
+
 				server = make_unique<framework::WebFramework>(filesystem::path(currentApplicationFolder) / constants::webFrameworkConfiguration);
 			}
 		}
@@ -353,8 +356,6 @@ namespace simple_server
 		}
 
 		this->applyConfiguration();
-
-		this->createMarkup();
 
 		this->registerHotkeys();
 

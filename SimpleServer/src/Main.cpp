@@ -1,7 +1,7 @@
 #include "headers.h"
 
 #include "GUIFramework.h"
-#include "Utility/Holders/WindowHolder.h"
+#include "Holders/WindowHolder.h"
 #include "Utility.h"
 
 #include "MainWindow.h"
@@ -14,8 +14,6 @@ int wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
 	try
 	{
-		gui_framework::GUIFramework::initUIThreadId();
-
 		gui_framework::WindowHolder holder(make_unique<simple_server::MainWindow>());
 			
 		holder.get<simple_server::MainWindow>()->applyCommandLine(pCmdLine);

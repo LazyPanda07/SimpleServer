@@ -5,7 +5,8 @@
 #include <shobjidl_core.h>
 
 #include "BaseComposites/StandardComposites/BaseMainWindow.h"
-#include "ComponentsHeader.h"
+#include "Components/Buttons/Button.h"
+#include "Components/StaticControl.h"
 
 namespace simple_server
 {
@@ -23,7 +24,7 @@ namespace simple_server
 		gui_framework::Button* startStopApplicationButton;
 
 	private:
-		void createMarkup();
+		void createMarkup() override;
 
 		void applyConfiguration();
 

@@ -1,6 +1,7 @@
 #include "Utility.h"
 
-#include "CompositesHeader.h"
+#include "Composites/DialogBox.h"
+
 #include "SimpleServerConstants.h"
 #include "Exceptions/FileDoesNotExistException.h"
 
