@@ -73,7 +73,8 @@
     <CustomBuildStep>
       <Command>xcopy /y $(SolutionDir)WebFrameworkLibrary\WebFramework\dlls\*.* $(OutDir)
 xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\SimpleServerLocalization.dll $(OutDir)
-xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\Localization.dll $(OutDir)</Command>
+xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\Localization.dll $(OutDir)
+xcopy /y /e $(SolutionDir)bin\$(Configuration)-$(Platform)\WebFramework\WebFrameworkAssets\ $(OutDir)WebFrameworkAssets\</Command>
       <Outputs>output.txt</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
@@ -102,7 +103,8 @@ xcopy /y $(ProjectDir)*.json $(OutDir)
 del /q $(OutDir)*.lib
 del /q $(OutDir)*exp
 xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\SimpleServerLocalization.dll $(OutDir)
-xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\Localization.dll $(OutDir)</Command>
+xcopy /y $(SolutionDir)bin\$(Configuration)-$(Platform)\Localization\Localization.dll $(OutDir)
+xcopy /y /e $(SolutionDir)bin\$(Configuration)-$(Platform)\WebFramework\WebFrameworkAssets\ $(OutDir)WebFrameworkAssets\</Command>
       <Outputs>output.txt</Outputs>
     </CustomBuildStep>
     <PostBuildEvent>
